@@ -25,143 +25,18 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- CSS Personnalisé pour un Design "Slick" (Thème Sombre) ---
-custom_css = """
-<style>
-    /* --- Global --- */
-    body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-        color: #E0E2E8; /* Texte principal plus clair */
-    }
-    .stApp {
-        background-color: #0E1117; /* Fond principal très sombre */
-    }
-    h1, h2, h3, h4, h5, h6 {
-        color: #A2FACF; /* Vert menthe pour les titres */
-    }
-
-    /* --- Sidebar --- */
-    .css-1d391kg, .css-1lcbmhc { /* Classes de la Sidebar */
-        background-color: #1A1F2B; /* Fond sidebar un peu plus clair */
-        border-right: 1px solid #30363F;
-    }
-    .css-1d391kg .stRadio > label, .css-1d391kg .stFileUploader > label, .css-1d391kg .stButton > button {
-        color: #C9D1D9; /* Texte des labels et boutons sidebar */
-    }
-    .css-1d391kg .stButton > button {
-        background-color: #238636; /* Vert GitHub pour les boutons */
-        border: none;
-        border-radius: 6px;
-        transition: background-color 0.2s ease-in-out;
-    }
-    .css-1d391kg .stButton > button:hover {
-        background-color: #2EA043;
-    }
-    .css-1d391kg .stImage > img { /* Logo IFS */
-        background-color: white; /* Fond blanc pour le logo SVG */
-        padding: 5px;
-        border-radius: 6px;
-    }
+# --- Fonction pour charger le CSS externe ---
+def load_css(file_name):
+    try:
+        with open(file_name) as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.warning(f"Fichier CSS '{file_name}' non trouvé. Les styles par défaut seront utilisés.")
 
 
-    /* --- Onglets --- */
-    .stTabs [data-baseweb="tab-list"] {
-        background-color: #161B22; /* Fond de la barre d'onglets */
-        border-radius: 8px 8px 0 0;
-        border-bottom: 1px solid #30363F;
-        padding: 0.5rem 0;
-    }
-    .stTabs [data-baseweb="tab"] {
-        font-weight: 600;
-        color: #8B949E; /* Couleur des onglets inactifs */
-        border-radius: 6px;
-        margin: 0 0.25rem;
-        padding: 0.5rem 1rem;
-        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-    }
-    .stTabs [data-baseweb="tab"]:hover {
-        background-color: #21262D;
-        color: #C9D1D9;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: #0D1117; /* Fond de l'onglet actif (correspond au fond principal) */
-        color: #A2FACF !important; /* Vert menthe pour l'onglet actif */
-        border-bottom: 3px solid #A2FACF;
-        box-shadow: none;
-    }
-
-    /* --- Expanders --- */
-    .stExpander {
-        border: 1px solid #30363F;
-        border-radius: 8px;
-        margin-bottom: 1.2rem;
-        background-color: #161B22; /* Fond de l'expander */
-    }
-    .stExpander header {
-        background-color: transparent; /* Enlever le fond par défaut du header */
-        color: #C9D1D9;
-        font-weight: 600;
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid #30363F; /* Ligne de séparation */
-    }
-    .stExpander header:hover {
-        background-color: #21262D;
-    }
-    .stExpander div[data-testid="stExpanderDetails"] { /* Contenu de l'expander */
-        background-color: #0D1117; /* Fond du contenu (correspond au fond principal) */
-        padding: 1rem;
-        border-radius: 0 0 7px 7px;
-    }
-
-    /* --- Métriques --- */
-    div[data-testid="stMetric"] {
-        background-color: #161B22;
-        border: 1px solid #30363F;
-        border-radius: 8px;
-        padding: 1rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    div[data-testid="stMetric"] > label { /* Label de la métrique */
-        color: #8B949E;
-    }
-    div[data-testid="stMetric"] > div:nth-child(2) > div { /* Valeur de la métrique */
-        color: #A2FACF;
-        font-size: 2em;
-        font-weight: 600;
-    }
-
-
-    /* --- DataFrames --- */
-    .stDataFrame {
-        border: 1px solid #30363F;
-        border-radius: 8px;
-    }
-    /* Pour un meilleur contraste dans les tables en thème sombre */
-    .dataframe > thead > tr > th { background-color: #21262D; color: #C9D1D9; border-bottom: 1px solid #484F58; }
-    .dataframe > tbody > tr > td { border-color: #30363F; }
-    .dataframe > tbody > tr:nth-child(even) { background-color: #181c23; } /* Lignes paires légèrement différentes */
-
-    /* --- Cartes Plotly --- */
-    .plotly-graph-div {
-        border-radius: 8px;
-        /* background-color: #161B22 !important; Fond pour les graphiques */
-    }
-
-    /* Masquer le "Made with Streamlit" et le menu hamburger (optionnel, mais pour un look "pro") */
-    /* footer {visibility: hidden;} */
-    /* #MainMenu {visibility: hidden;} */
-
-</style>
-"""
-st.markdown(custom_css, unsafe_allow_html=True)
-
-
-# --- Classe IFSAnalyzer (copiez-collez l'intégralité de la classe ici) ---
-# Assurez-vous que la classe IFSAnalyzer est la version la plus récente que nous avons développée,
-# avec les corrections pour la checklist et la classification thématique améliorée.
-# Pour la brièveté, je ne la répète pas ici, mais elle est CRUCIALE.
-# Remplacez le commentaire ci-dessous par le code de votre classe IFSAnalyzer.
-
+# --- Classe IFSAnalyzer (COLLEZ VOTRE CLASSE COMPLÈTE ICI) ---
+# Assurez-vous que c'est la version la plus récente avec les corrections précédentes.
+# Pour la brièveté, je ne la répète pas, mais elle est essentielle.
 # >>> DEBUT DE LA CLASSE IFSAnalyzer (COLLEZ VOTRE CLASSE ICI) <<<
 class IFSAnalyzer:
     def __init__(self, locked_file_io, checklist_file_io=None):
@@ -233,16 +108,16 @@ class IFSAnalyzer:
                 'text': ['payment', 'invoice', 'pay', 'closure', 'discontinued', 'bankrupt', 'denies access', 'auditor access denied', 'site access denied', 'ceased operation', 'fire', 'merged', 'cessation of activity', 'discontinuance of business', 'no longer exists', 'production activity has been stopped', 'terminated the contract', 'renounce'],
                 'chapters': []
             },
-            'INTEGRITY_PROGRAM_SPECIFIC_ISSUES': {
-                'text': ['integrity program audit', 'ifs integrity check', 'on-site check ioc', 'unannounced audit issue'],
-                'chapters': []
+            'INTEGRITY_PROGRAM_SPECIFIC_ISSUES': { # Ce thème est pour les cas où l'audit IP lui-même est le sujet.
+                'text': ['integrity program audit', 'ifs integrity check', 'on-site check ioc', 'unannounced audit issue', 'during the ioc audit', 'during ifs on site integrity check audit'],
+                'chapters': [] # Les chapitres cités dans un audit IP seront classés dans leur thème technique.
             }
         }
-        self.country_name_mapping = { # Pour la carte choropleth
+        self.country_name_mapping = {
             "Allemagne": "Germany", "Italie": "Italy", "Pays-Bas": "Netherlands",
             "Espagne": "Spain", "Pologne": "Poland", "France": "France",
             "Belgique": "Belgium", "Autriche": "Austria", "Grèce": "Greece",
-            "Turquie": "Turkey", "Danemark": "Denmark", "Royaume-Uni": "United Kingdom",
+            "Turquie": "Turkey", "Danemark": "Denmark", "Royaume-Uni": "United Kingdom", "UK": "United Kingdom",
             "États-Unis d'Amérique": "United States", "USA": "United States", "Chili": "Chile",
             "Brésil": "Brazil", "Maroc": "Morocco", "Bulgarie": "Bulgaria",
             "Roumanie": "Romania", "Lituanie": "Lithuania", "Serbie": "Serbia",
@@ -260,11 +135,15 @@ class IFSAnalyzer:
              "Arabie Saoudite": "Saudi Arabia", "Israël": "Israel", "Russie": "Russia",
              "Ukraine": "Ukraine", "Biélorussie": "Belarus", "Kazakhstan": "Kazakhstan",
              "Albanie": "Albania"
-            # Ajoutez d'autres pays au besoin
         }
         self.load_data(locked_file_io, checklist_file_io)
         if self.locked_df is not None:
             self.clean_lock_reasons()
+
+    # ... (Collez TOUTES les autres méthodes de la classe IFSAnalyzer ici, y compris load_data,
+    #      clean_lock_reasons, extract_ifs_chapters, analyze_themes, geographic_analysis, etc.,
+    #      jusqu'à la fin de la classe, en vous assurant que les corrections précédentes sont bien là.)
+    # --- Pour la lisibilité, je ne remets que les méthodes modifiées ou importantes pour le contexte ---
 
     def load_data(self, locked_file_io, checklist_file_io=None):
         try:
@@ -273,15 +152,14 @@ class IFSAnalyzer:
                 self.locked_df = self.locked_df_original[
                     self.locked_df_original['Standard'].astype(str).str.contains('IFS Food', case=True, na=False)
                 ].copy()
-                if self.locked_df.empty: # Vérifier si vide APRES filtrage
+                if self.locked_df.empty:
                     st.warning("Aucune entrée 'IFS Food' trouvée après filtrage. Vérifiez la colonne 'Standard'.")
-                    self.locked_df = None # Invalider
-                    return
+                    self.locked_df = None; return
             else:
                 st.warning("Colonne 'Standard' non trouvée. Analyse sur toutes les données.")
                 self.locked_df = self.locked_df_original.copy()
 
-            if self.locked_df is None: return # S'arrêter si self.locked_df est devenu None
+            if self.locked_df is None : return
 
             if checklist_file_io:
                 try:
@@ -291,38 +169,29 @@ class IFSAnalyzer:
                     target_num_col_name = 'Requirement Number'
                     target_text_col_name = 'Requirement text (English)'
 
-                    # Mappage flexible des colonnes de la checklist
                     if actual_num_col_name in temp_checklist_df.columns and actual_text_col_name in temp_checklist_df.columns:
                         self.checklist_df = temp_checklist_df.rename(columns={
-                            actual_num_col_name: target_num_col_name,
-                            actual_text_col_name: target_text_col_name
-                        })
+                            actual_num_col_name: target_num_col_name, actual_text_col_name: target_text_col_name})
                     elif target_num_col_name in temp_checklist_df.columns and target_text_col_name in temp_checklist_df.columns:
-                        self.checklist_df = temp_checklist_df # Déjà les bons noms
-                    else: # Essayer d'autres noms possibles pour la robustesse
+                        self.checklist_df = temp_checklist_df
+                    else:
                         potential_num_cols = ['Requirement Number', 'NUM_REQ', 'Requirement No.', 'Exigence N°']
                         potential_text_cols = ['Requirement text (English)', 'IFS Requirements', 'Texte Exigence (Anglais)', 'Texte Exigence']
-                        
                         found_num_col = next((col for col in potential_num_cols if col in temp_checklist_df.columns), None)
                         found_text_col = next((col for col in potential_text_cols if col in temp_checklist_df.columns), None)
-
                         if found_num_col and found_text_col:
                             self.checklist_df = temp_checklist_df.rename(columns={
-                                found_num_col: target_num_col_name,
-                                found_text_col: target_text_col_name
-                            })
-                            st.info(f"Checklist chargée. Colonnes '{found_num_col}' et '{found_text_col}' mappées.")
+                                found_num_col: target_num_col_name, found_text_col: target_text_col_name})
+                            # st.info(f"Checklist chargée. Colonnes '{found_num_col}' et '{found_text_col}' mappées.")
                         else:
                             st.warning("Colonnes requises pour la checklist non trouvées. L'analyse des exigences sera limitée.")
                             self.checklist_df = None
                 except Exception as e_checklist:
-                    st.error(f"Erreur lors du chargement du fichier checklist : {e_checklist}")
-                    self.checklist_df = None
+                    st.error(f"Erreur lors du chargement du fichier checklist : {e_checklist}"); self.checklist_df = None
         except Exception as e:
-            st.error(f"❌ Erreur critique lors du chargement du fichier des suspensions : {e}")
-            self.locked_df = None
+            st.error(f"❌ Erreur critique lors du chargement du fichier des suspensions : {e}"); self.locked_df = None
 
-    def clean_lock_reasons(self):
+    def clean_lock_reasons(self): # Identique
         if self.locked_df is None or 'Lock reason' not in self.locked_df.columns: return
         self.locked_df['lock_reason_clean'] = self.locked_df['Lock reason'].astype(str).fillna('') \
             .str.lower() \
@@ -330,18 +199,17 @@ class IFSAnalyzer:
             .str.replace(r'[^\w\s\.\-\/\%§]', ' ', regex=True) \
             .str.replace(r'\s+', ' ', regex=True).str.strip()
 
-    def extract_ifs_chapters(self, text):
+    def extract_ifs_chapters(self, text): # Identique (avec améliorations précédentes)
         if pd.isna(text) or not isinstance(text, str) or text.strip() == '': return []
-        # Patterns plus précis pour éviter les faux positifs (ex: dates)
         patterns = [
-            r'(?:ko|major|cl\.|req\.|requirement(?: item)?|chapter|section|point|§|cl\s+|clause)\s*(\d\.\d{1,2}(?:\.\d{1,2})?)(?!\s*\d{2,4})', # Ne pas capturer si suivi d'une date
+            r'(?:ko|major|cl\.|req\.|requirement(?: item)?|chapter|section|point|§|cl\s+|clause)?\s*(\d\.\d{1,2}(?:\.\d{1,2})?)(?!\s*\d{2,4})',
             r'(\d\.\d{1,2}(?:\.\d{1,2})?)\s*(?:ko|major|:|-|\(ko\)|\(major\))(?!\s*\d{2,4})',
-            r'(?<!\d\.)(\d)\s*-\s*ko', # Chapitre principal seul avant - KO (ex: 5 - KO)
+            r'(?<!\d\.)(\d)\s*-\s*ko',
             r'requirement\s+(\d\.\d\.\d)(?!\s*\d{2,4})',
             r'cl\s+(\d\.\d+(?:\.\d+)?)(?!\s*\d{2,4})',
             r'§\s*(\d\.\d+(?:\.\d+)?)(?!\s*\d{2,4})',
             r'point\s+(\d\.\d+(?:\.\d+)?)(?!\s*\d{2,4})',
-            r'item\s+(\d\.\d+(?:\.\d+)?)(?!\s*\d{2,4})' # Pour "item 1.2.3"
+            r'item\s+(\d\.\d+(?:\.\d+)?)(?!\s*\d{2,4})'
         ]
         chapters_found = []
         normalized_text = text.lower().replace('\n', ' ').replace('\r', ' ')
@@ -351,57 +219,83 @@ class IFSAnalyzer:
                 chapter_num_match = match if isinstance(match, str) else (match[-1] if isinstance(match, tuple) and match[-1] else match[0] if isinstance(match, tuple) and match[0] else None)
                 if chapter_num_match:
                     chapter_num = str(chapter_num_match).strip().rstrip('.').strip()
-                    if re.fullmatch(r'\d(\.\d+){0,2}', chapter_num): # Accepte X, X.Y, X.Y.Z
+                    if re.fullmatch(r'\d(\.\d+){0,2}', chapter_num):
                         main_chapter_part = chapter_num.split('.')[0]
                         if main_chapter_part.isdigit() and 1 <= int(main_chapter_part) <= 6:
                              chapters_found.append(chapter_num)
         return sorted(list(set(chapters_found)))
 
-    def analyze_themes(self):
+    def analyze_themes(self): # Version améliorée de la classification
         if self.locked_df is None or 'lock_reason_clean' not in self.locked_df.columns: return {}, {}
         theme_assignments = []
-        if 'Lock reason' not in self.locked_df.columns: # Vérification supplémentaire
-             st.error("La colonne 'Lock reason' est manquante dans le fichier des suspensions.")
-             return {}, {}
+        if 'Lock reason' not in self.locked_df.columns: return {}, {}
 
-        extracted_chapters_series = self.locked_df['Lock reason'].apply(
-            lambda x: self.extract_ifs_chapters(x) if pd.notna(x) else []
-        )
+        # Pré-calculer les chapitres extraits pour éviter de le faire dans la boucle
+        # (déjà fait dans la version précédente du code, mais on le garde ici pour référence)
+        # self.locked_df['extracted_chapters_for_theme_analysis'] = self.locked_df['Lock reason'].apply(lambda x: self.extract_ifs_chapters(x) if pd.notna(x) else [])
+
 
         for index, row in self.locked_df.iterrows():
             reason_text_clean = row.get('lock_reason_clean', '')
             original_reason = row.get('Lock reason', '')
             supplier = row.get('Supplier', 'N/A')
             country = row.get('Country/Region', 'N/A')
-            extracted_chapters = extracted_chapters_series.loc[index]
+            
+            # Utiliser les chapitres pré-calculés
+            # extracted_chapters = row['extracted_chapters_for_theme_analysis']
+            # Si la colonne n'est pas ajoutée au DF, recalculer ici :
+            extracted_chapters = self.extract_ifs_chapters(original_reason)
+
+
             best_theme = 'NON_CLASSIFIE'
             max_score = 0
-
-            admin_theme = 'ADMINISTRATIVE_OPERATIONAL_ISSUES'
-            admin_keywords = self.themes_definition.get(admin_theme, {}).get('text', [])
-            if any(re.search(r'\b' + re.escape(kw.lower()) + r'\b', reason_text_clean) for kw in admin_keywords):
-                best_theme = admin_theme
-                max_score = 200 # Priorité haute
-
-            if max_score < 200: # Si ce n'est pas classé comme admin
+            
+            # 1. Vérifier d'abord ADMINISTRATIVE_OPERATIONAL_ISSUES
+            admin_theme_name = 'ADMINISTRATIVE_OPERATIONAL_ISSUES'
+            admin_theme_data = self.themes_definition.get(admin_theme_name, {})
+            admin_keywords = admin_theme_data.get('text', [])
+            
+            is_admin_issue = False
+            for kw in admin_keywords:
+                if re.search(r'\b' + re.escape(kw.lower()) + r'\b', reason_text_clean):
+                    is_admin_issue = True
+                    break
+            
+            if is_admin_issue:
+                best_theme = admin_theme_name
+                max_score = 200 # Score élevé pour assurer la priorité
+            else: # Si ce n'est pas un problème admin, évaluer les thèmes techniques
                 for theme_name, theme_data in self.themes_definition.items():
-                    if theme_name == admin_theme: continue
+                    if theme_name == admin_theme_name: continue # Skip admin theme here
+
                     current_score = 0
+                    # Score pour les chapitres
                     for chap_kw in theme_data.get('chapters', []):
-                        if chap_kw in extracted_chapters: current_score += 100
+                        if chap_kw in extracted_chapters:
+                            current_score += 100
                     
-                    text_match_count = 0
+                    # Score pour les mots-clés textuels
+                    text_match_score = 0
                     for kw in theme_data.get('text', []):
-                        pattern = r'\b' + re.escape(kw.lower()) + r'\b' # Mot entier
-                        if re.search(pattern, reason_text_clean): text_match_count += 1
-                        elif kw.lower() in reason_text_clean: text_match_count += 0.5 # Partiel
-                    current_score += text_match_count * 20
+                        # Privilégier les mots-clés plus longs ou les expressions si définies
+                        # (Pourrait être une amélioration future : liste de 'phrases' avec poids plus élevé)
+                        pattern_exact = r'\b' + re.escape(kw.lower()) + r'\b'
+                        pattern_partial_start = r'\b' + re.escape(kw.lower()) # Commence par le mot-clé
+                        
+                        if re.search(pattern_exact, reason_text_clean):
+                            text_match_score += 20 # Poids plus fort pour mot exact
+                        elif kw.lower() in reason_text_clean: # Match partiel
+                            text_match_score += 5 # Poids plus faible
+                            
+                    current_score += text_match_score
 
                     if current_score > max_score:
                         max_score = current_score
                         best_theme = theme_name
             
-            if best_theme != admin_theme and max_score < 20: best_theme = 'NON_CLASSIFIE'
+            # Seuil pour la classification technique
+            if best_theme != admin_theme_name and max_score < 15: # Seuil un peu plus bas
+                 best_theme = 'NON_CLASSIFIE'
 
             theme_assignments.append({'theme': best_theme, 'reason': original_reason, 'supplier': supplier, 'country': country})
 
@@ -411,22 +305,20 @@ class IFSAnalyzer:
             final_theme_counts[assignment['theme']] += 1
             final_theme_details[assignment['theme']].append({"reason": assignment['reason'], "supplier": assignment['supplier'], "country": assignment['country']})
         return final_theme_counts, final_theme_details
-    
-    def geographic_analysis(self):
+
+    def geographic_analysis(self): # Modifié pour utiliser le mappage pour la carte
         if self.locked_df is None or 'Country/Region' not in self.locked_df.columns: return None
         geo_df = self.locked_df.groupby('Country/Region').size().sort_values(ascending=False).reset_index(name='total_suspensions')
-        # Appliquer le mappage ici pour la carte choropleth
         geo_df['Country/Region_EN'] = geo_df['Country/Region'].map(self.country_name_mapping).fillna(geo_df['Country/Region'])
         return geo_df
-
-    # ... (clean_product_scopes, product_scope_analysis, chapter_frequency_analysis, analyze_audit_types comme avant)
-    # ... (generate_ifs_recommendations_analysis, cross_analysis_scope_themes comme avant)
-    # ... (TOUTES les méthodes _create_plotly_... et _create_matplotlib_figure_for_pdf, _add_text_to_pdf_page, export_report_to_pdf)
-    # ... (et les generate_..._text DOIVENT ÊTRE COPIÉES ICI INTÉGRALEMENT DE LA VERSION PRÉCÉDENTE)
-    # Pour des raisons de concision, je ne les répète pas. Il est crucial de les avoir.
-    # Assurez-vous que la classe est complète.
-
-    # Je remets les méthodes qui nécessitaient des ajustements ou qui étaient cruciales
+    
+    # --- Recopiez ici les autres méthodes de la classe IFSAnalyzer ---
+    # (clean_product_scopes, product_scope_analysis, chapter_frequency_analysis, analyze_audit_types,
+    #  generate_ifs_recommendations_analysis, cross_analysis_scope_themes,
+    #  _create_plotly_bar_chart, _create_plotly_choropleth_map, _create_plotly_heatmap,
+    #  _add_text_to_pdf_page, _create_matplotlib_figure_for_pdf, export_report_to_pdf,
+    #  generate_detailed_theme_analysis_text, generate_audit_analysis_report_text)
+    # --- C'est crucial que la classe soit complète ---
     def clean_product_scopes(self, scope_text): # Reste identique
         if pd.isna(scope_text): return []
         scope_text = str(scope_text)
@@ -461,33 +353,34 @@ class IFSAnalyzer:
 
     def analyze_audit_types(self): # Reste identique
         if self.locked_df is None: return {}, {}
-        audit_keywords = {
-            'INTEGRITY_PROGRAM_IP': ['integrity program', 'integrity', 'programme intégrité', 'programme integrity','onsite check', 'on site check', 'on-site check', 'on-site integrity check', 'ioc', 'i.o.c', 'ip audit', 'integrity audit', 'spot check', 'unannounced audit', 'audit inopiné', 'control inopiné', 'ifs integrity'],
-            'SURVEILLANCE_FOLLOW_UP': ['surveillance', 'surveillance audit', 'follow up audit', 'follow-up', 'suivi', 'corrective action'],
+        audit_keywords_definition = {
+            'INTEGRITY_PROGRAM_IP': ['integrity program', 'integrity', 'programme intégrité', 'programme integrity','onsite check', 'on site check', 'on-site check', 'on-site integrity check', 'ioc', 'i.o.c', 'ip audit', 'integrity audit', 'spot check', 'unannounced audit', 'audit inopiné', 'control inopiné', 'ifs integrity', 'during the ioc audit', 'during ifs on site integrity check audit'],
+            'SURVEILLANCE_FOLLOW_UP': ['surveillance', 'surveillance audit', 'follow up audit', 'follow-up', 'suivi', 'corrective action'], # Corrective action peut être ambigu
             'COMPLAINT_WITHDRAWAL': ['complaint', 'réclamation', 'plainte', 'customer complaint', 'withdrawal', 'retrait', 'recall'],
             'RECERTIFICATION_RENEWAL': ['recertification', 'renewal', 'renouvellement', 're-certification', 'renewal audit']
-        }
-        audit_analysis = {audit_type: 0 for audit_type in audit_keywords}
-        audit_examples = {audit_type: {'examples': [], 'countries': Counter()} for audit_type in audit_keywords}
+        } # Utiliser une variable locale pour éviter conflit avec self.themes_definition
+
+        audit_analysis = {audit_type: 0 for audit_type in audit_keywords_definition}
+        audit_examples = {audit_type: {'examples': [], 'countries': Counter()} for audit_type in audit_keywords_definition}
         for index, row in self.locked_df.iterrows():
             text_to_search = (str(row.get('Lock reason', '')) + " " + str(row.get('Lock history', ''))).lower()
-            for audit_type, keywords in audit_keywords.items():
-                if any(keyword in text_to_search for keyword in keywords):
+            for audit_type, keywords in audit_keywords_definition.items():
+                if any(keyword.lower() in text_to_search for keyword in keywords):
                     audit_analysis[audit_type] += 1
                     if len(audit_examples[audit_type]['examples']) < 5:
                         audit_examples[audit_type]['examples'].append({
                             'Supplier': row.get('Supplier', 'N/A'), 'Country/Region': row.get('Country/Region', 'N/A'),
                             'Lock reason': row.get('Lock reason', 'N/A')})
                     audit_examples[audit_type]['countries'][row.get('Country/Region', 'N/A')] += 1
+                    # On ne break pas ici, un audit peut être IP ET un renouvellement par exemple (rare)
         for audit_type in audit_examples:
             audit_examples[audit_type]['countries'] = dict(audit_examples[audit_type]['countries'].most_common(5))
         return audit_analysis, audit_examples
 
-    def generate_ifs_recommendations_analysis(self):
+    def generate_ifs_recommendations_analysis(self): # S'assure que la checklist a les bonnes colonnes après renommage
         if self.locked_df is None or self.checklist_df is None: return None
         if 'Requirement Number' not in self.checklist_df.columns or 'Requirement text (English)' not in self.checklist_df.columns:
-            # Message déjà géré dans load_data, mais double-check
-            return None
+            return None # Message d'erreur géré dans load_data
             
         chapter_counts = self.chapter_frequency_analysis()
         if not chapter_counts: return None
@@ -499,62 +392,83 @@ class IFSAnalyzer:
             recommendations.append({'chapter': chapter, 'count': count, 'requirement_text': req_text})
         return recommendations
 
-    def cross_analysis_scope_themes(self):
+    def cross_analysis_scope_themes(self): # Ajuster pour utiliser les clés de self.themes_definition
         if self.locked_df is None or 'Product scopes' not in self.locked_df.columns or 'lock_reason_clean' not in self.locked_df.columns: return None
-        themes_for_cross = {
-            'HYGIENE': self.themes_definition['HYGIENE_PERSONNEL']['text'], 'HACCP': self.themes_definition['HACCP_CCP_OPRP']['text'],
-            'TRACE': self.themes_definition['TRACEABILITY']['text'], 'ALLERGEN': self.themes_definition['ALLERGEN_MANAGEMENT']['text'],
-            'CLEAN': self.themes_definition['CLEANING_SANITATION']['text'], 'MAINT': self.themes_definition['MAINTENANCE_EQUIPMENT_INFRASTRUCTURE']['text'],
-            'LABEL': self.themes_definition['LABELLING_PRODUCT_INFORMATION']['text'], 'PEST': self.themes_definition['PEST_CONTROL']['text'],
-            'MGT_SYS': self.themes_definition['MANAGEMENT_SYSTEM_RESPONSIBILITY_CULTURE']['text'],
-            'F_BODY': self.themes_definition['FOREIGN_BODY_CONTAMINATION']['text']
-        }
+        
+        # Sélectionner des thèmes pertinents pour l'analyse croisée (pour éviter une heatmap trop large)
+        technical_themes_for_cross = [
+            'HYGIENE_PERSONNEL', 'HACCP_CCP_OPRP', 'TRACEABILITY', 'ALLERGEN_MANAGEMENT',
+            'PEST_CONTROL', 'CLEANING_SANITATION', 'MAINTENANCE_EQUIPMENT_INFRASTRUCTURE',
+            'FOREIGN_BODY_CONTAMINATION', 'LABELLING_PRODUCT_INFORMATION', 'QUANTITY_CONTROL_WEIGHT_MEASUREMENT'
+        ]
+        
         scope_theme_data = []
         for idx, row in self.locked_df.iterrows():
-            scopes_text, reason_text = row['Product scopes'], row['lock_reason_clean']
-            if pd.notna(scopes_text) and pd.notna(reason_text) and reason_text:
+            scopes_text, reason_text_clean = row['Product scopes'], row['lock_reason_clean']
+            # Obtenir le thème principal assigné pour cette raison (pour ne pas tout recalculer)
+            # (Cette partie nécessiterait de stocker le thème assigné par la méthode analyze_themes(),
+            # pour l'instant, on se base sur une recherche de mots-clés simplifiée pour la heatmap)
+            
+            if pd.notna(scopes_text) and pd.notna(reason_text_clean) and reason_text_clean:
                 for scope in self.clean_product_scopes(scopes_text):
-                    for theme, keywords in themes_for_cross.items():
-                        if any(kw.lower() in reason_text for kw in keywords):
-                            scope_theme_data.append({'scope': f"Scope {scope}", 'theme': theme})
+                    for theme_key in technical_themes_for_cross:
+                        theme_data = self.themes_definition.get(theme_key, {})
+                        keywords = theme_data.get('text', [])
+                        # chapters_kw = theme_data.get('chapters', []) # On pourrait aussi inclure les chapitres ici
+                        
+                        if any(kw.lower() in reason_text_clean for kw in keywords):
+                            scope_theme_data.append({'scope': f"Scope {scope}", 'theme': theme_key.replace("_", " ").title()[:15]}) # Nom de thème court
         if not scope_theme_data: return None
-        return pd.DataFrame(scope_theme_data).pivot_table(index='scope', columns='theme', aggfunc='size', fill_value=0)
+        df_cross = pd.DataFrame(scope_theme_data)
+        if df_cross.empty: return None
+        return df_cross.pivot_table(index='scope', columns='theme', aggfunc='size', fill_value=0)
 
-    def _create_plotly_bar_chart(self, data_dict, title, orientation='v', xaxis_title="", yaxis_title="", color='royalblue', height=400, text_auto=True): # Correction RGBA faite
+    def _create_plotly_bar_chart(self, data_dict, title, orientation='v', xaxis_title="", yaxis_title="", color='royalblue', height=400, text_auto=True):
         if not data_dict : return go.Figure()
-        y_data, x_data = (list(data_dict.keys()), list(data_dict.values())) if orientation == 'h' else (list(data_dict.values()), list(data_dict.keys()))
-        fig = go.Figure(go.Bar(x=x_data, y=y_data, orientation=orientation, marker_color=color, text=y_data if orientation=='v' else x_data, textposition='auto' if text_auto else None))
+        # Trier les données pour l'affichage (plus grand en haut si horizontal)
+        if orientation == 'h':
+            sorted_data = dict(sorted(data_dict.items(), key=lambda item: item[1])) # Petit en bas, grand en haut
+        else:
+            sorted_data = dict(sorted(data_dict.items(), key=lambda item: item[1], reverse=True)) # Grand à gauche
+            
+        y_data, x_data = (list(sorted_data.keys()), list(sorted_data.values())) if orientation == 'h' else (list(sorted_data.values()), list(sorted_data.keys()))
+        
+        fig = go.Figure(go.Bar(x=x_data, y=y_data, orientation=orientation, marker_color=color, 
+                               text=y_data if orientation=='v' else x_data, 
+                               textposition='outside' if text_auto else None, # Texte à l'extérieur pour lisibilité
+                               textfont_size=9))
         fig.update_layout(title={'text': f"<b>{title}</b>", 'x':0.5, 'font': {'size': 16, 'family': "Arial, sans-serif"}},
                           xaxis_title=xaxis_title, yaxis_title=yaxis_title, height=height,
-                          margin=dict(l=20, r=20, t=60, b=20), font=dict(family="Arial, sans-serif", size=10),
-                          yaxis=dict(autorange="reversed", tickfont_size=9) if orientation == 'h' else dict(tickfont_size=9),
+                          margin=dict(l=10, r=10, t=60, b=40), font=dict(family="Arial, sans-serif", size=10),
+                          yaxis=dict(tickfont_size=9) if orientation == 'h' else dict(tickfont_size=9, autorange="reversed" if orientation=='v' and len(y_data)>10 else None), # Inverser si vertical et beaucoup d'items
                           xaxis=dict(tickfont_size=9),
-                          plot_bgcolor='rgba(245,245,245,1)', paper_bgcolor='rgba(255,255,255,1)')
+                          plot_bgcolor='rgba(250,250,250,1)', paper_bgcolor='rgba(255,255,255,1)') # Fond plus clair
+        if orientation == 'v': fig.update_xaxes(categoryorder='total descending') # Trier les barres verticales par défaut
         return fig
 
     def _create_plotly_choropleth_map(self, geo_data_df, title, height=500):
         if geo_data_df is None or geo_data_df.empty or 'Country/Region_EN' not in geo_data_df.columns: return go.Figure()
         fig = px.choropleth(geo_data_df, locations="Country/Region_EN", locationmode='country names',
-                            color="total_suspensions", hover_name="Country/Region", # Afficher le nom original au survol
-                            color_continuous_scale=px.colors.sequential.Viridis_r,
+                            color="total_suspensions", hover_name="Country/Region",
+                            color_continuous_scale=px.colors.sequential.Blues, # Palette plus sobre
                             title=title, height=height)
         fig.update_layout(title={'text': f"<b>{title}</b>", 'x':0.5, 'font': {'size': 16, 'family': "Arial, sans-serif"}},
-                          geo=dict(showframe=False, showcoastlines=True, projection_type='natural earth', bgcolor='rgba(230,240,255,1)'),
-                          margin=dict(l=10, r=10, t=50, b=10), font=dict(family="Arial, sans-serif"),
-                          paper_bgcolor='rgba(255,255,255,1)')
+                          geo=dict(showframe=False, showcoastlines=True, projection_type='natural earth', bgcolor='rgba(235,245,255,1)'),
+                          margin=dict(l=0, r=0, t=50, b=0), font=dict(family="Arial, sans-serif"), # Réduire marges
+                          paper_bgcolor='rgba(255,255,255,1)', coloraxis_colorbar=dict(title="Suspensions"))
         return fig
 
-    def _create_plotly_heatmap(self, pivot_matrix, title, height=500): # Correction RGBA faite
+    def _create_plotly_heatmap(self, pivot_matrix, title, height=500):
         if pivot_matrix is None or pivot_matrix.empty: return go.Figure()
         fig = px.imshow(pivot_matrix, text_auto='.0f', aspect="auto", color_continuous_scale='Blues', title=title, height=height)
         fig.update_layout(title={'text': f"<b>{title}</b>", 'x':0.5, 'font': {'size': 16, 'family': "Arial, sans-serif"}},
                           margin=dict(l=10, r=10, t=80, b=10), font=dict(family="Arial, sans-serif"),
-                          xaxis=dict(tickangle=30, side='bottom', tickfont_size=9), yaxis=dict(tickfont_size=9),
+                          xaxis=dict(tickangle=35, side='bottom', tickfont_size=9), yaxis=dict(tickfont_size=9),
                           paper_bgcolor='rgba(255,255,255,1)')
         fig.update_traces(hovertemplate="Scope: %{y}<br>Thème: %{x}<br>Cas: %{z}<extra></extra>")
         return fig
 
-    def _add_text_to_pdf_page(self, fig, text_lines, start_y=0.95, line_height=0.035, font_size=9, title="", title_font_size=14, max_chars_per_line=100): # Reste identique
+    def _add_text_to_pdf_page(self, fig, text_lines, start_y=0.95, line_height=0.035, font_size=9, title="", title_font_size=14, max_chars_per_line=100):
         ax = fig.gca(); ax.clear(); ax.axis('off')
         if title:
             ax.text(0.5, start_y, title, ha='center', va='top', fontsize=title_font_size, fontweight='bold', fontname='DejaVu Sans')
@@ -573,15 +487,15 @@ class IFSAnalyzer:
             if not line.strip(): current_y -= (line_height * 0.3)
         return True
 
-    def _create_matplotlib_figure_for_pdf(self, data_dict_or_df, title, x_label="", y_label="", chart_type='barh', top_n=10, color='skyblue', xtick_rotation=0, ytick_fontsize=8): # Reste identique (avec corrections précédentes)
+    def _create_matplotlib_figure_for_pdf(self, data_dict_or_df, title, x_label="", y_label="", chart_type='barh', top_n=10, color='skyblue', xtick_rotation=0, ytick_fontsize=8):
         if not data_dict_or_df and not isinstance(data_dict_or_df, pd.DataFrame) : return None
         fig, ax = plt.subplots(figsize=(10, 6.5))
         items, values = [], []
 
         if isinstance(data_dict_or_df, (Counter, dict)):
-            filtered_data = {k: v for k, v in data_dict_or_df.items() if isinstance(v, (int, float)) and v > 0} # S'assurer que v est numérique
+            filtered_data = {k: v for k, v in data_dict_or_df.items() if isinstance(v, (int, float)) and v > 0}
             if not filtered_data: return None
-            sorted_data = dict(sorted(filtered_data.items(), key=lambda item: item[1], reverse=True)[:top_n])
+            sorted_data = dict(sorted(filtered_data.items(), key=lambda item: item[1], reverse=(chart_type=='bar'))[:top_n]) # Tri inversé pour barh
             items = [str(k).replace('_',' ').replace('MANAGEMENT','MGMT').replace('RESPONSIBILITY','RESP.')[:35] for k in sorted_data.keys()]
             values = list(sorted_data.values())
         elif isinstance(data_dict_or_df, pd.DataFrame):
@@ -593,32 +507,43 @@ class IFSAnalyzer:
                  if df_top_filtered.empty: return None
                  items = [f"{row['chapter']}\n({str(row['requirement_text'])[:40]}...)" if row['requirement_text'] != "Texte de l'exigence non trouvé dans la checklist fournie." else row['chapter'] for index, row in df_top_filtered.iterrows()]
                  values = df_top_filtered['count'].tolist(); chart_type = 'bar'
-            else:
-                if not df_top.empty:
-                    if len(df_top.columns) >= 1:
-                         items = df_top.index.astype(str).tolist() if len(df_top.columns) == 1 else df_top.iloc[:,0].astype(str).tolist()
-                         raw_values = df_top.iloc[:,0].tolist() if len(df_top.columns) == 1 else df_top.iloc[:,1].tolist()
-                         numeric_values = [v for v in raw_values if isinstance(v, (int, float)) and v > 0]
-                         if not numeric_values: return None
-                         valid_indices = [i for i, v in enumerate(raw_values) if isinstance(v, (int, float)) and v > 0]
-                         items = [items[i] for i in valid_indices][:len(numeric_values)] # Assurer la même longueur
-                         values = numeric_values
-                    else: return None
+            else: # Cas générique
+                if not df_top.empty and len(df_top.columns) > 0 :
+                    first_col_name = df_top.columns[0]
+                    items = df_top[first_col_name].astype(str).tolist()
+                    if len(df_top.columns) > 1:
+                        second_col_name = df_top.columns[1]
+                        raw_values = df_top[second_col_name].tolist()
+                    else: # Si une seule colonne, utiliser l'index pour les items et la colonne pour les valeurs
+                        items = df_top.index.astype(str).tolist()
+                        raw_values = df_top[first_col_name].tolist()
+
+                    numeric_values = [v for v in raw_values if isinstance(v, (int, float)) and v > 0]
+                    if not numeric_values: return None
+                    valid_indices = [i for i, v in enumerate(raw_values) if isinstance(v, (int, float)) and v > 0]
+                    items = [items[i] for i in valid_indices][:len(numeric_values)]
+                    values = numeric_values
+                else: return None
+
 
         if not items or not values or all(v == 0 for v in values): return None
 
         if chart_type == 'barh':
-            ax.barh(items, values, color=color, edgecolor='grey', zorder=3)
+            y_pos = np.arange(len(items))
+            ax.barh(y_pos, values, color=color, edgecolor='grey', zorder=3)
+            ax.set_yticks(y_pos)
             ax.set_yticklabels(items, fontsize=ytick_fontsize, fontname='DejaVu Sans')
             ax.invert_yaxis()
             ax.set_xlabel(x_label if x_label else 'Nombre de cas', fontsize=10, fontname='DejaVu Sans')
             for i, v_ in enumerate(values): ax.text(v_ + (max(values, default=1)*0.01), i, str(v_), va='center', fontsize=8, fontname='DejaVu Sans', zorder=5)
             ax.set_xlim(0, max(values, default=1) * 1.15)
         elif chart_type == 'bar':
-            bars = ax.bar(items, values, color=color, edgecolor='grey', zorder=3)
+            x_pos = np.arange(len(items))
+            bars = ax.bar(x_pos, values, color=color, edgecolor='grey', zorder=3, width=0.7)
+            ax.set_xticks(x_pos)
             ax.set_xticklabels(items, rotation=xtick_rotation, ha='right' if xtick_rotation > 0 else 'center', fontsize=ytick_fontsize, fontname='DejaVu Sans')
             ax.set_ylabel(y_label if y_label else 'Nombre de cas', fontsize=10, fontname='DejaVu Sans')
-            for bar_idx, bar_obj in enumerate(bars): # Correction pour itérer sur les barres
+            for bar_idx, bar_obj in enumerate(bars):
                 yval = bar_obj.get_height()
                 ax.text(bar_obj.get_x() + bar_obj.get_width()/2.0, yval + (max(values, default=1)*0.01), int(yval), ha='center', va='bottom', fontsize=8, fontname='DejaVu Sans', zorder=5)
             ax.set_ylim(0, max(values, default=1) * 1.15)
@@ -629,7 +554,7 @@ class IFSAnalyzer:
         plt.tight_layout(pad=2.0)
         return fig
 
-    def export_report_to_pdf(self, filename='IFS_Analysis_Report.pdf'): # Reste identique (avec corrections précédentes)
+    def export_report_to_pdf(self, filename='IFS_Analysis_Report.pdf'):
         if self.locked_df is None: return None
         try:
             with PdfPages(filename) as pdf:
@@ -686,31 +611,52 @@ class IFSAnalyzer:
                     pdf.savefig(fig, bbox_inches='tight'); plt.close(fig)
             return filename
         except Exception as e:
-            st.error(f"❌ Erreur majeure PDF: {e}")
-            # traceback.print_exc()
+            st.error(f"❌ Erreur majeure lors de la génération du PDF: {e}")
             return None
 
-    def generate_detailed_theme_analysis_text(self): # Reste identique
+    def generate_detailed_theme_analysis_text(self):
         if self.locked_df is None: return ""
         theme_counts, theme_details = self.analyze_themes()
         lines = []
-        for theme, count in sorted(theme_counts.items(), key=lambda x: x[1], reverse=True):
+        technical_themes_text = {k:v for k,v in theme_counts.items() if k not in ['ADMINISTRATIVE_OPERATIONAL_ISSUES', 'NON_CLASSIFIE']}
+        lines.append("--- THÈMES TECHNIQUES DE NON-CONFORMITÉ ---")
+        for theme, count in sorted(technical_themes_text.items(), key=lambda x: x[1], reverse=True):
             if count > 0:
                 lines.append(f"\n🎯 {theme.replace('_', ' ').title()} ({count} cas)")
                 lines.append("-" * 60)
-                for i, detail in enumerate(theme_details[theme][:3]):
+                for i, detail in enumerate(theme_details.get(theme,[])[:3]): # Utiliser .get()
                     reason_short = str(detail['reason'])[:200] + "..." if len(str(detail['reason'])) > 200 else str(detail['reason'])
                     lines.append(f"   Ex {i+1} ({detail['supplier']}, {detail['country']}):")
                     lines.append(f"     Motif: {reason_short}")
                 lines.append("")
+        
+        admin_issues_count_text = theme_counts.get('ADMINISTRATIVE_OPERATIONAL_ISSUES', 0)
+        if admin_issues_count_text > 0:
+            lines.append("\n--- PROBLÈMES ADMINISTRATIFS / OPÉRATIONNELS ---")
+            lines.append(f"\n🎯 Problèmes Administratifs / Opérationnels ({admin_issues_count_text} cas)")
+            lines.append("-" * 60)
+            for i, detail in enumerate(theme_details.get('ADMINISTRATIVE_OPERATIONAL_ISSUES',[])[:3]):
+                 reason_short = str(detail['reason'])[:200] + "..." if len(str(detail['reason'])) > 200 else str(detail['reason'])
+                 lines.append(f"   Ex {i+1} ({detail['supplier']}, {detail['country']}): {reason_short}")
+            lines.append("")
+
+        unclassified_count_text = theme_counts.get('NON_CLASSIFIE', 0)
+        if unclassified_count_text > 0:
+            lines.append("\n--- MOTIFS NON CLASSIFIÉS ---")
+            lines.append(f"\n🎯 Non Classifiés ({unclassified_count_text} cas)")
+            lines.append("-" * 60)
+            for i, detail in enumerate(theme_details.get('NON_CLASSIFIE',[])[:3]):
+                 reason_short = str(detail['reason'])[:200] + "..." if len(str(detail['reason'])) > 200 else str(detail['reason'])
+                 lines.append(f"   Ex {i+1} ({detail['supplier']}, {detail['country']}): {reason_short}")
+            lines.append("")
         return "\n".join(lines)
 
-    def generate_audit_analysis_report_text(self): # Reste identique
+    def generate_audit_analysis_report_text(self):
         if self.locked_df is None: return ""
         audit_analysis, audit_examples = self.analyze_audit_types()
         total_suspensions = len(self.locked_df)
         if total_suspensions == 0: return "Aucune suspension à analyser."
-        lines = [f"Total audits spécifiques: {sum(audit_analysis.values())} ({sum(audit_analysis.values())/total_suspensions*100:.1f}% du total des suspensions, si total > 0 else 0%)"]
+        lines = [f"Total audits spécifiques: {sum(audit_analysis.values())} ({sum(audit_analysis.values())/total_suspensions*100:.1f}% du total, si total > 0 else 0%)"]
         for audit_type, count in sorted(audit_analysis.items(), key=lambda x: x[1], reverse=True):
             if count > 0:
                 lines.append(f"\n🎯 {audit_type.replace('_', ' ').title()} ({count} cas - {count/total_suspensions*100:.1f}%)")
@@ -721,6 +667,7 @@ class IFSAnalyzer:
                     lines.append(f"     Motif: {reason_short}")
                 lines.append("")
         return "\n".join(lines)
+
 # >>> FIN DE LA CLASSE IFSAnalyzer <<<
 
 
@@ -739,20 +686,14 @@ def download_checklist_content_from_github(url):
         st.error(f"Échec du téléchargement de la checklist depuis GitHub : {e}.")
         return None
 
-# --- Interface Streamlit (main et display_dashboard_tabs) ---
-# Copiez ici les fonctions main() et display_dashboard_tabs() de la version précédente du code.
-# Assurez-vous qu'elles sont à jour avec les dernières logiques de gestion des fichiers et d'appel à l'analyseur.
-# Pour la brièveté, je ne les répète pas ici.
-
 # --- Interface Streamlit ---
 def main():
-    # (Le code de la fonction main reste identique à la version précédente)
+    load_css("assets/styles.css") # Charger le CSS externe
     st.title("🛡️ Analyseur de Sécurité Alimentaire IFS")
-    st.markdown("""
-    Bienvenue ! Téléversez votre fichier CSV des suspensions IFS (format IFS Locked) pour obtenir une analyse détaillée.
-    L'utilisation de la checklist IFS Food V8 (téléchargée depuis GitHub par défaut) enrichira l'analyse des exigences.
-    """)
+    st.markdown("Bienvenue ! Téléversez votre fichier CSV des suspensions IFS pour une analyse détaillée.")
 
+    # ... (Le reste de la fonction main() est identique à la version précédente)
+    # ... (Elle gère le téléversement, l'instanciation de l'analyseur et l'appel à display_dashboard_tabs)
     with st.sidebar:
         st.image("https://www.ifs-certification.com/images/ifs_logo.svg", width=150)
         st.header("⚙️ Options d'Analyse")
@@ -798,7 +739,7 @@ def main():
 
         if analyzer.locked_df is not None and not analyzer.locked_df.empty:
             st.success(f"Fichier **'{locked_file_uploaded.name}'** analysé : **{len(analyzer.locked_df)}** suspensions IFS Food trouvées.")
-            display_dashboard_tabs(analyzer) # La fonction qui affiche les onglets
+            display_dashboard_tabs(analyzer)
 
             st.sidebar.markdown("---")
             st.sidebar.subheader("Téléchargement du Rapport")
@@ -831,11 +772,9 @@ def main():
     st.sidebar.markdown("Analyseur IFS v1.3")
     st.sidebar.markdown("Développé par IA")
 
-
 def display_dashboard_tabs(analyzer):
     # (La fonction display_dashboard_tabs reste la même que dans la version précédente,
-    #  elle appelle les méthodes de l'analyseur pour obtenir les données et les afficher.
-    #  Assurez-vous de la copier intégralement ici.)
+    # mais avec les ajustements pour l'affichage des thèmes et la gestion des erreurs)
     tab_titles = ["📊 Vue d'Ensemble", "🌍 Géographie", "🏷️ Thèmes Détaillés", "📋 Exigences IFS", "🕵️ Audits Spécifiques", "🔗 Analyse Croisée"]
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(tab_titles)
 
@@ -855,7 +794,7 @@ def display_dashboard_tabs(analyzer):
         row1_col1, row1_col2 = st.columns(2)
         with row1_col1:
             theme_counts_full, _ = analyzer.analyze_themes()
-            theme_counts_technical = {k: v for k, v in theme_counts_full.items() if k not in ['ADMINISTRATIVE_OPERATIONAL_ISSUES', 'NON_CLASSIFIE']} # Exclure
+            theme_counts_technical = {k: v for k, v in theme_counts_full.items() if k not in ['ADMINISTRATIVE_OPERATIONAL_ISSUES', 'NON_CLASSIFIE']}
             if theme_counts_technical:
                 top_themes = dict(sorted(theme_counts_technical.items(), key=lambda x:x[1], reverse=True)[:10])
                 top_themes_clean = {k.replace('_',' ').replace('MANAGEMENT','MGMT').replace('SYSTEM','SYS').replace('RESPONSIBILITY','RESP.'):v for k,v in top_themes.items() if v > 0}
@@ -870,15 +809,15 @@ def display_dashboard_tabs(analyzer):
     with tab2:
         st.header("🌍 Analyse Géographique")
         if analyzer.locked_df is None or analyzer.locked_df.empty: st.warning("Aucune donnée géographique."); return
-        geo_stats_df = analyzer.geographic_analysis() # Devrait maintenant avoir Country/Region_EN
+        geo_stats_df = analyzer.geographic_analysis() # Contient Country/Region_EN
         if geo_stats_df is not None and not geo_stats_df.empty:
             geo_stats_df_filtered = geo_stats_df[geo_stats_df['total_suspensions'] > 0]
             if not geo_stats_df_filtered.empty:
                 st.plotly_chart(analyzer._create_plotly_choropleth_map(geo_stats_df_filtered, "Suspensions par Pays"), use_container_width=True)
                 st.markdown("---"); st.subheader("Tableau des Suspensions par Pays (Top 20)")
-                # Afficher la colonne originale 'Country/Region' et les suspensions
                 display_df_geo = geo_stats_df_filtered[['Country/Region', 'total_suspensions']].head(20)
-                st.dataframe(display_df_geo.style.highlight_max(subset=['total_suspensions'], color='rgba(255,170,170,0.5)', axis=0).format({'total_suspensions': '{:,}'}), use_container_width=True)
+                st.dataframe(display_df_geo.style.highlight_max(subset=['total_suspensions'], props='color:black; background-color:rgba(255,100,100,0.3); font-weight:bold;')
+                                                    .format({'total_suspensions': '{:,}'}), use_container_width=True)
             else: st.info("Aucun pays avec des suspensions à afficher sur la carte après filtrage.")
         else: st.info("Données géographiques non disponibles.")
 
@@ -897,14 +836,14 @@ def display_dashboard_tabs(analyzer):
             if count > 0:
                 with st.expander(f"{theme.replace('_', ' ').title()} ({count} cas)", expanded=False):
                     st.markdown(f"**Exemples de motifs (jusqu'à 5) pour : {theme.replace('_', ' ').title()}**")
-                    for i, detail in enumerate(theme_details.get(theme, [])[:5]): # Utiliser .get()
+                    for i, detail in enumerate(theme_details.get(theme, [])[:5]):
                         st.markdown(f"**Cas {i+1} (Fournisseur: `{detail['supplier']}`, Pays: `{detail['country']}`)**")
                         st.caption(f"{str(detail['reason'])[:600]}...")
                         if i < 4 : st.markdown("---")
         
         if admin_issues_count > 0:
             st.subheader("Problèmes Administratifs / Opérationnels")
-            with st.expander(f"Problèmes Administratifs / Opérationnels ({admin_issues_count} cas)", expanded=False):
+            with st.expander(f"Problèmes Administratifs / Opérationnels ({admin_issues_count} cas)", expanded=True): # Expanded par défaut
                 for i, detail in enumerate(theme_details.get('ADMINISTRATIVE_OPERATIONAL_ISSUES', [])[:5]):
                     st.markdown(f"**Cas {i+1} (Fournisseur: `{detail['supplier']}`, Pays: `{detail['country']}`)**")
                     st.caption(f"{str(detail['reason'])[:600]}...")
@@ -926,13 +865,11 @@ def display_dashboard_tabs(analyzer):
             st.success("Checklist IFS Food V8 utilisée pour l'analyse des exigences.")
             df_reco = pd.DataFrame(recommendations).sort_values(by='count', ascending=False)
             top_reco_chart_df = df_reco.head(15).copy()
-            # S'assurer que 'requirement_text' existe avant de l'utiliser pour le label
             if 'requirement_text' in top_reco_chart_df.columns:
                  top_reco_chart_df['display_label'] = top_reco_chart_df.apply(lambda row: f"{row['chapter']} ({str(row['requirement_text'])[:30]}...)", axis=1)
-            else: # Fallback si la colonne manque pour une raison quelconque
-                 top_reco_chart_df['display_label'] = top_reco_chart_df['chapter']
+            else: top_reco_chart_df['display_label'] = top_reco_chart_df['chapter']
             reco_chart_data = pd.Series(top_reco_chart_df['count'].values, index=top_reco_chart_df['display_label']).to_dict()
-            st.plotly_chart(analyzer._create_plotly_bar_chart(reco_chart_data, "Top 15 Exigences IFS Citées", orientation='v', color='gold', height=550, text_auto=False), use_container_width=True)
+            if reco_chart_data: st.plotly_chart(analyzer._create_plotly_bar_chart(reco_chart_data, "Top 15 Exigences IFS Citées", orientation='v', color='gold', height=550, text_auto=False), use_container_width=True)
             st.markdown("---"); st.subheader("Détail des Exigences Citées (Top 25)")
             for index, row in df_reco.head(25).iterrows():
                 with st.expander(f"Exigence {row['chapter']} ({row['count']} mentions)", expanded=False):
@@ -941,35 +878,48 @@ def display_dashboard_tabs(analyzer):
              st.warning("Checklist non chargée/valide. Affichage des numéros de chapitres uniquement.")
              df_reco_no_text = pd.DataFrame(recommendations).sort_values(by='count', ascending=False).head(15)
              chapter_counts_dict = pd.Series(df_reco_no_text['count'].values, index=df_reco_no_text['chapter']).to_dict()
-             st.plotly_chart(analyzer._create_plotly_bar_chart(chapter_counts_dict, "Top Chapitres IFS Cités (Numéros)", orientation='v', color='gold', height=500), use_container_width=True)
+             if chapter_counts_dict: st.plotly_chart(analyzer._create_plotly_bar_chart(chapter_counts_dict, "Top Chapitres IFS Cités (Numéros)", orientation='v', color='gold', height=500), use_container_width=True)
              st.dataframe(df_reco_no_text, use_container_width=True)
         else: st.info("Aucune exigence/chapitre IFS n'a pu être extrait, ou la checklist n'est pas disponible/utilisée.")
 
-    with tab5: # Audits Spécifiques
-        # (Reste comme avant)
+    with tab5:
         st.header("🕵️ Analyse par Audits Spécifiques")
         if analyzer.locked_df is None or analyzer.locked_df.empty: st.warning("Aucune donnée à afficher."); return
         audit_analysis, audit_examples = analyzer.analyze_audit_types()
+        
+        # Focus sur Integrity Program
+        ip_count = audit_analysis.get('INTEGRITY_PROGRAM_IP', 0)
+        if ip_count > 0:
+            st.subheader(f"🔎 Focus sur les Audits Integrity Program (IOC, On-site Check, etc.) - {ip_count} cas")
+            with st.container(): # Utiliser un container pour un style potentiellement différent
+                 # st.markdown(f"<div class='focus-section'>", unsafe_allow_html=True) # Si vous voulez un style CSS spécifique
+                for i, ex_data in enumerate(audit_examples['INTEGRITY_PROGRAM_IP'][:10]): # Afficher jusqu'à 10 exemples IP
+                    st.markdown(f"**Cas IP {i+1} (Fournisseur: `{ex_data.get('Supplier', 'N/A')}`, Pays: `{ex_data.get('Country/Region', 'N/A')}`)**")
+                    st.caption(f"{str(ex_data.get('Lock reason', 'N/A'))[:600]}...")
+                    st.markdown("---")
+                 # st.markdown("</div>", unsafe_allow_html=True)
+        
+        st.subheader("Répartition Générale par Type d'Audit")
         if audit_analysis:
             audit_analysis_clean = {k.replace('_', ' ').title():v for k,v in audit_analysis.items() if v > 0}
-            if audit_analysis_clean: st.plotly_chart(analyzer._create_plotly_bar_chart(audit_analysis_clean, "Répartition par Type d'Audit Spécifique", color='darkorange', height=400), use_container_width=True)
-            st.markdown("---"); st.subheader("Détails et Exemples par Type d'Audit")
+            if audit_analysis_clean: st.plotly_chart(analyzer._create_plotly_bar_chart(audit_analysis_clean, "Répartition Générale par Type d'Audit", color='darkorange', height=400), use_container_width=True)
+            
+            st.markdown("---"); st.subheader("Détails et Exemples (autres types d'audit)")
             for audit_type, count in sorted(audit_analysis.items(), key=lambda x: x[1], reverse=True):
-                if count > 0:
+                if count > 0 and audit_type != 'INTEGRITY_PROGRAM_IP': # Exclure IP ici car déjà traité
                     with st.expander(f"{audit_type.replace('_', ' ').title()} ({count} cas)", expanded=False):
-                        st.markdown(f"**Exemples (jusqu'à 5) pour : {audit_type.replace('_', ' ').title()}**")
-                        for i, ex_data in enumerate(audit_examples[audit_type]['examples'][:5]):
+                        st.markdown(f"**Exemples (jusqu'à 3) pour : {audit_type.replace('_', ' ').title()}**")
+                        for i, ex_data in enumerate(audit_examples[audit_type][:3]):
                             st.markdown(f"**Cas {i+1} (Fournisseur: `{ex_data.get('Supplier', 'N/A')}`, Pays: `{ex_data.get('Country/Region', 'N/A')}`)**")
                             st.caption(f"{str(ex_data.get('Lock reason', 'N/A'))[:600]}...")
-                            if i < 4 : st.markdown("---")
+                            if i < 2 : st.markdown("---") # Moins de séparateurs
                         countries_data = audit_examples[audit_type]['countries']
                         if countries_data:
                             st.markdown(f"**Répartition géographique (Top 5 pays) :** {', '.join([f'{c} ({n})' for c, n in countries_data.items()])}")
         else: st.info("Aucune donnée sur les types d'audits spécifiques disponible.")
 
-    with tab6: # Analyse Croisée
-        # (Reste comme avant)
-        st.header("🔗 Analyse Croisée : Thèmes vs Product Scopes")
+    with tab6:
+        st.header("🔗 Analyse Croisée : Thèmes Techniques vs Product Scopes")
         if analyzer.locked_df is None or analyzer.locked_df.empty: st.warning("Aucune donnée à afficher."); return
         cross_pivot_matrix = analyzer.cross_analysis_scope_themes()
         if cross_pivot_matrix is not None and not cross_pivot_matrix.empty:
@@ -980,8 +930,8 @@ def display_dashboard_tabs(analyzer):
             else: cross_pivot_matrix_filtered = cross_pivot_matrix
 
             if not cross_pivot_matrix_filtered.empty:
-                 st.plotly_chart(analyzer._create_plotly_heatmap(cross_pivot_matrix_filtered, "Fréquence des Thèmes par Product Scope (Top Scopes)", height=max(500, len(cross_pivot_matrix_filtered.index) * 35 + 200)), use_container_width=True)
-                 st.markdown("---"); st.subheader("Tableau de Corrélation Complet (Scopes vs Thèmes)")
+                 st.plotly_chart(analyzer._create_plotly_heatmap(cross_pivot_matrix_filtered, "Fréquence des Thèmes Techniques par Product Scope (Top Scopes)", height=max(500, len(cross_pivot_matrix_filtered.index) * 35 + 200)), use_container_width=True)
+                 st.markdown("---"); st.subheader("Tableau de Corrélation Complet (Scopes vs Thèmes Techniques)")
                  st.dataframe(cross_pivot_matrix.style.background_gradient(cmap='Blues', axis=None).format("{:.0f}"), use_container_width=True)
             else: st.info("Pas assez de données pour la heatmap après filtrage.")
         else: st.info("Données insuffisantes pour l'analyse croisée Thèmes vs Product Scopes.")
