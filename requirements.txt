@@ -1,0 +1,10 @@
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+streamlit>=1.20.0 # Spécifier une version ou s'assurer que c'est une version récente
+requests
+# wordcloud # Si utilisé
+# openpyxl # Si utilisé pour lire des .xlsx
+scikit-learn # Pour TF-IDF si utilisé
